@@ -68,8 +68,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotNull(message: "Le prenom est Obligatoire!!!")]
     protected $prenom;
 
-    #[ORM\Column(type: 'boolean')]
-    private $isVerified = false;
+    // #[ORM\Column(type: 'boolean')]
+    // private $isVerified = false;
 
 
     public function getId(): ?int
@@ -166,17 +166,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function isVerified(): bool
-    {
-        return $this->isVerified;
-    }
+    // public function isVerified(): bool
+    // {
+    //     return $this->isVerified;
+    // }
 
-    public function setIsVerified(bool $isVerified): self
-    {
-        $this->isVerified = $isVerified;
+    // public function setIsVerified(bool $isVerified): self
+    // {
+    //     $this->isVerified = $isVerified;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
 
     /**
