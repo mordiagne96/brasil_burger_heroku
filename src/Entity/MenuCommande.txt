@@ -1,0 +1,150 @@
+<?php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+use App\Repository\MenuCommandeRepository;
+use Symfony\Component\Serializer\Annotation\Groups;
+
+#[ORM\Entity(repositoryClass: MenuCommandeRepository::class)]
+#[ApiResource()]
+class MenuCommande
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    #[Groups(['com:write'])]
+    private $id;
+
+    #[ORM\ManyToOne(targetEntity: Menu::class, inversedBy: 'menuCommandes')]
+    #[Groups(['com:write'])]
+    private $menu;
+
+    #[ORM\ManyToOne(targetEntity: Commande::class, inversedBy: 'menuCommandes')]
+    #[Groups(['com:write'])]
+    private $commande;
+
+    #[ORM\Column(type: 'integer')]
+    #[Groups(['com:write'])]
+    private $quantite;
+
+    #[ORM\OneToMany(mappedBy: 'menuCommande', targetEntity: TailleBoisson::class)]
+    #[Groups(['com:write'])]
+    private $tailleBoissons;
+
+    #[ORM\OneToMany(mappedBy: 'menuCommande', targetEntity: MenuCommandeTailleBoisson::class)]
+    #[Groups(['com:write'])]
+    private $menuCommandeTailleBoissons;
+
+    public function __construct()
+    {
+        $this->tailleBoissons = new ArrayCollection();
+        $this->menuCommandeTailleBoissons = new ArrayCollection();
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getMenu(): ?Menu
+    {
+        return $this->menu;
+    }
+
+    public function setMenu(?Menu $menu): self
+    {
+        $this->menu = $menu;
+
+        return $this;
+    }
+
+    public function getCommande(): ?Commande
+    {
+        return $this->commande;
+    }
+
+    public function setCommande(?Commande $commande): self
+    {
+        $this->commande = $commande;
+
+        return $this;
+    }
+
+    public function getQuantite(): ?int
+    {
+        return $this->quantite;
+    }
+
+    public function setQuantite(int $quantite): self
+    {
+        $this->quantite = $quantite;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TailleBoisson>
+     */
+    public function getTailleBoissons(): Collection
+    {
+        return $this->tailleBoissons;
+    }
+
+    public function addTailleBoisson(TailleBoisson $tailleBoisson): self
+    {
+        if (!$this->tailleBoissons->contains($tailleBoisson)) {
+            $this->tailleBoissons[] = $tailleBoisson;
+            $tailleBoisson->setMenuCommande($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTailleBoisson(TailleBoisson $tailleBoisson): self
+    {
+        if ($this->tailleBoissons->removeElement($tailleBoisson)) {
+            // set the owning side to null (unless already changed)
+            if ($tailleBoisson->getMenuCommande() === $this) {
+                $tailleBoisson->setMenuCommande(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, MenuCommandeTailleBoisson>
+     */
+    public function getMenuCommandeTailleBoissons(): Collection
+    {
+        return $this->menuCommandeTailleBoissons;
+    }
+
+    public function addMenuCommandeTailleBoisson(MenuCommandeTailleBoisson $menuCommandeTailleBoisson): self
+    {
+        if (!$this->menuCommandeTailleBoissons->contains($menuCommandeTailleBoisson)) {
+            $this->menuCommandeTailleBoissons[] = $menuCommandeTailleBoisson;
+            $menuCommandeTailleBoisson->setMenuCommande($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMenuCommandeTailleBoisson(MenuCommandeTailleBoisson $menuCommandeTailleBoisson): self
+    {
+        if ($this->menuCommandeTailleBoissons->removeElement($menuCommandeTailleBoisson)) {
+            // set the owning side to null (unless already changed)
+            if ($menuCommandeTailleBoisson->getMenuCommande() === $this) {
+                $menuCommandeTailleBoisson->setMenuCommande(null);
+            }
+        }
+
+        return $this;
+    }
+
+   
+}

@@ -1,0 +1,37 @@
+<?php
+
+namespace App\EventSubscriber;
+
+use Doctrine\ORM\Events;
+use Symfony\Component\HttpKernel\KernelEvents;
+use Doctrine\Persistence\Event\LifecycleEventArgs;
+use ApiPlatform\Core\EventListener\EventPriorities;
+use App\Services\DecodeService;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+
+class BurgerSubscriber implements EventSubscriberInterface
+{
+    private $service;
+
+    public function __construct(DecodeService $service)
+    {
+        $this->service = $service;   
+    }
+   
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            KernelEvents::REQUEST => [
+                'deserialize', EventPriorities::PRE_DESERIALIZE,
+            ],
+        ];
+    }
+
+    public function deserialize(RequestEvent $event){
+        // dd("ok");
+        // dd($event->getRequest('requestStack')->files->get("image"));
+        // dd($event->getRequest('requestStack')->request->get("nom"));
+        
+    }
+}
